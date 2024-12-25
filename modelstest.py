@@ -1,90 +1,130 @@
+from tools import *
+from groq import Groq
+import os
 import time
-import ollama
+import ast
+import json
 
-# Define actions as functions
-import pyautogui
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
-def move_mouse_left():
-    pyautogui.move(-100, 0)
-    print("Moving mouse left.")
+models = [
+    "llama3-groq-8b-8192-tool-use-preview",
+    'llama3-groq-70b-8192-tool-use-preview',
+    "llama-3.1-70b-versatile",
+    "llama-3.1-8b-instant",
+]
 
-def move_mouse_right():
-    pyautogui.move(100, 0)
-    print("Moving mouse right.")
+prompts_to_test = [
+    {
+        "prompt" : "move the mouse up by 100 pixels",
+        "expected function calls" : [move_mouse_up],
+        "expected arguments" : [{"pixels": 100}],
+        "tags" : ["mouse", "single"]
+    },
 
-def move_mouse_up():
-    pyautogui.move(0, -100)
-    print("Moving mouse up.")
+    {
+        "prompt" : "move the mouse down by 100 pixels and then right by 50 pixels and then click the mouse and write hello world",
+        "expected function calls" : [move_mouse_down, move_mouse_right, click_mouse, write],
+        "expected arguments" : [{"pixels": 100}, {"pixels": 50}, {}, {"text": "hello world"}],
+        "tags" : ["mouse", "multiple", "keys"]
+    },
 
-def move_mouse_down():
-    pyautogui.move(0, 100)
-    print("Moving mouse down.")
+    {
+        "prompt" : "move the mouse left by 100 pixels and then up by 50 pixels",
+        "expected function calls" : [move_mouse_left, move_mouse_up],
+        "expected arguments" : [{"pixels": 100}, {"pixels": 50}],
+        "tags" : ["mouse", "multiple"]
+    },
 
-def click_spacebar():
-    pyautogui.press('space')  # Press the space bar
-    print("Space bar clicked.")
+    {
+        "prompt" : "switch tabs wait one second and then left click then write hello world wait 1 more second and then switch tabs again",
+        "expected function calls" : [cmd_tab, wait, click_mouse, write, wait, cmd_tab],
+        "expected arguments" : [{}, {"seconds": 1}, {}, {"text": "hello world"}, {"seconds": 1}, {}],
+        "tags" : ["mouse", "keys", "multiple"]
+    },
 
-def stop_listening():
-    print("Stopping the listening process.")
-    global running
-    running = False
+    {
+        "prompt" : "press enter",
+        "expected function calls" : [press_enter],
+        "expected arguments" : [{}],
+        "tags" : ["keys", "single"]
+    },
 
-def click_mouse():
-    pyautogui.click()  # Perform a mouse click
-    print("Mouse clicked.")
+    {
+        "prompt" : "left click and then right hello worlds",
+        "expected function calls" : [click_mouse, write],
+        "expected arguments" : [{}, {"text": "hello worlds"}],
+        "tags" : ["mouse", "keys", "multiple", "wrong word"]
+    },
 
-def double_click_mouse():
-    pyautogui.click()  # Perform a mouse click
-    pyautogui.click()  # Perform a mouse click
-    print("Mouse double-clicked.")
+    {
+        "prompt" : "remove the mouse up by 100 pixels",
+        "expected function calls" : [],
+        "expected arguments" : [],
+        "tags" : ["mouse", "single", "wrong word"]
+    }
 
-# Mapping of commands to functions
-command_map = {
-    "move mouse left": move_mouse_left,
-    "move mouse right": move_mouse_right,
-    "move mouse up": move_mouse_up,
-    "move mouse down": move_mouse_down,
-    "click spacebar": click_spacebar,
-    "click mouse": click_mouse,
-    "double click mouse": double_click_mouse,
-    "stop listening": stop_listening,
-}
+]
 
-def get_best_match_command(command, models):
-    command_list = ', '.join(command_map.keys())
-    messages = [
-        {
-            'role': 'system',
-            'content': f'You are a bot that takes a string and finds the closest matching command from the list. The list of commands is: {command_list}. You should return only the exact name of the matched command without any additional words. Return None if no match is found. You do not ever respond you just give the exact name of the command as written in the list word for word.',
-        },
-        {
-            "role": "user",
-            "content": command,
-        },
-    ]
+def get_groq_response(messages, model):
+    client=Groq(api_key=GROQ_API_KEY)
+    start_time = time.time()
 
-    responses = {}
+    entire_response = client.chat.completions.create(
+        model=model, # LLM to use
+        messages=messages, # Conversation history
+        stream=False,
+        tools=tools, # Available tools (i.e. functions) for our LLM to use
+        tool_choice="auto", # Let our LLM decide when to use tools
+        max_tokens=4096 # Maximum number of tokens to allow in our response
+    )
+    end_time = time.time()
+    response = entire_response.choices[0]
+    # Calculate the elapsed time
+    elapsed_time = end_time - start_time
+    print(f'Groq took: {elapsed_time:.2f} seconds to respond')
+    return response
 
-    for model in models:
-        start_time = time.time()
-        response = ollama.chat(model=model, messages=messages)
-        end_time = time.time()
-
-        responses[model] = {
-            "response": response['message']['content'],
-            "time_taken": round(end_time - start_time, 2),
+def test_models(models, prompts_to_test):
+    all_results = []
+    for model in models:  # test each model
+        print(f"Testing model: {model}")
+        model_results = {
+            "model": model,
+            "correct": 0,
+            "incorrect": 0,
+            "total": len(prompts_to_test)
         }
+        for test in prompts_to_test:  # test each prompt
+            messages = [{'role': 'user', 'content': test["prompt"]}]
+            response = get_groq_response(messages, model)
+            tools = response.message.tool_calls if response.message and response.message.tool_calls else []
+            function_calls = []
+            arguments = []
+            for tool in tools:  # get the function calls and arguments
+                function_calls.append(tool.function.name)
+                arguments.append(ast.literal_eval(tool.function.arguments) if isinstance(tool.function.arguments, str) else tool.function.arguments)
 
-    return responses
+            expected_function_calls = [func.__name__ for func in test["expected function calls"]]
+            if function_calls == expected_function_calls and arguments == test["expected arguments"]:  # check if matches
+                model_results["correct"] += 1  # increment the correct count
+                for tag in test["tags"]:  # increment the correct count for each tag
+                    if tag not in model_results:
+                        model_results[tag] = {"correct": 0, "incorrect": 0, "total": 0}
+                    model_results[tag]["correct"] += 1
+                    model_results[tag]["total"] += 1
+            else:
+                model_results["incorrect"] += 1  # increment the incorrect count
+                for tag in test["tags"]:  # increment the incorrect count for each tag
+                    if tag not in model_results:
+                        model_results[tag] = {"correct": 0, "incorrect": 0, "total": 0}
+                    model_results[tag]["incorrect"] += 1
+                    model_results[tag]["total"] += 1
+        all_results.append(model_results)
 
-# Example usage
-models_to_test = ["llama3.2", "gemma:2b"]  # Replace with actual model names you want to test
-command = "click the mouse please"
-results = get_best_match_command(command, models_to_test)
+    return all_results
 
-# Print the results
-for model, result in results.items():
-    print(f"Model: {model}")
-    print(f"Response: {result['response']}")
-    print(f"Time taken: {result['time_taken']} seconds")
-    print("-")
+
+results = test_models(models, prompts_to_test)
+with open("modelsTestSave.json", "w") as file:
+    json.dump(results, file, indent=4) 

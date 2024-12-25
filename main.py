@@ -81,7 +81,7 @@ def execute_tools(response):
 
   
 recognizer = sr.Recognizer()  # Ensure recognizer is inside the function to avoid scoping issues
-
+WAKE_WORDS = ["hey controller", "hello controller", "controller"]
 while True:
     with sr.Microphone() as source:
         recognizer.adjust_for_ambient_noise(source, duration=1)
@@ -91,14 +91,19 @@ while True:
     try:
         # Recognizing the command
         command = recognizer.recognize_google(audio).lower()
-        start_time = time.time()
-        response = get_tools(command)
-        end_time = time.time()
-        get_tools_Time = end_time - start_time
-        if response.message.tool_calls: # Check if there are any tool calls in the response and process them
-            execute_tools(response)
-        else:
-            print("No tools to execute.")
+        print(f"Command: {command}")
+        detected_wake_word = next((word for word in WAKE_WORDS if word in command), None)
+        if detected_wake_word:
+            print(f"Detected wake word: {detected_wake_word}")
+            command = command.replace(detected_wake_word, "").strip()
+            start_time = time.time()
+            response = get_tools(command)
+            end_time = time.time()
+            get_tools_Time = end_time - start_time
+            if response.message.tool_calls: # Check if there are any tool calls in the response and process them
+                execute_tools(response)
+            else:
+                print("No tools to execute.")
     except sr.UnknownValueError:
         print("Could not understand the audio.")
     
