@@ -42,6 +42,25 @@ def triple_click_mouse():
     pyautogui.click()  # Perform a mouse click
     print("Mouse triple-clicked.")
 
+def write(text):
+    pyautogui.write(text)
+    print(f"Writing '{text}'.")
+
+def cmd_tab():
+    pyautogui.keyDown('command')
+    time.sleep(0.1)  # Add a small delay to simulate natural pressing
+    pyautogui.press('tab')  # Press the 'tab' key
+    pyautogui.keyUp('command')  # Release the 'command' key
+    print("Switching applications.")
+
+def wait(seconds):
+    time.sleep(int(seconds))
+    print(f"Waiting for {seconds} seconds.")
+
+def press_enter():
+    pyautogui.press('enter')
+    print("Enter key pressed.")
+
 # Define Tools for Each Mouse Movement Function
 move_mouse_left_tool = {
     'type': 'function',
@@ -168,6 +187,62 @@ triple_click_mouse_tool = {
     },
 }
 
+write_tool = {
+    'type': 'function',
+    'function': {
+        'name': 'write',
+        'description': 'Write a given text',
+        'parameters': {
+            'type': 'object',
+            'required': ['text'],
+            'properties': {
+                'text': {'type': 'string', 'description': 'The text to write'}
+            },
+        },
+    },
+}
+
+cmd_tab_tool = {
+    'type': 'function',
+    'function': {
+        'name': 'cmd_tab',
+        'description': 'Presses Command and then Tab to Switch tabs or applications, it is commonly referred to as Alt-Tab. This command is called usually when the user says "Switch tabs"',
+        'parameters': {
+            'type': 'object',
+            'required': [],
+            'properties': {}
+        },
+    },
+}
+
+wait_tool = {
+    'type': 'function',
+    'function': {
+        'name': 'wait',
+        'description': 'Wait for a given number of seconds',
+        'parameters': {
+            'type': 'object',
+            'required': ['seconds'],
+            'properties': {
+                'seconds': {'type': 'integer', 'description': 'The number of seconds to wait'}
+            },
+        },
+    },
+}
+
+press_enter_tool = {
+    'type': 'function',
+    'function': {
+        'name': 'press_enter',
+        'description': 'Press the Enter key',
+        'parameters': {
+            'type': 'object',
+            'required': [],
+            'properties': {}
+        },
+    },
+}
+
 # Available Tools
 tools = [
     move_mouse_left_tool,
@@ -179,6 +254,10 @@ tools = [
     click_mouse_tool,
     double_click_mouse_tool,
     triple_click_mouse_tool,
+    write_tool,
+    cmd_tab_tool,
+    wait_tool,
+    press_enter_tool,
 ]
 
 # Available Functions Mapping
@@ -192,4 +271,8 @@ available_functions = {
     'click_mouse': click_mouse,
     'double_click_mouse': double_click_mouse,
     'triple_click_mouse': triple_click_mouse,
+    'write': write,
+    'cmd_tab': cmd_tab,
+    'wait': wait,
+    'press_enter': press_enter,
 }

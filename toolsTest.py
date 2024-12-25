@@ -1,6 +1,9 @@
 import pyautogui
-from ollama import chat, ChatResponse
+from groq import Groq
 import time
+import os
+
+GROQ_API_KEY =os.environ.get("GROQ_API_KEY")
 
 # Function Definitions
 def move_mouse_left(pixels):
@@ -101,13 +104,20 @@ messages = [{'role': 'user', 'content': 'move the mouse up 123 pixels and then l
 print('Prompt:', messages[0]['content'])
 start_time = time.time()
 # Call to the Chat API with the tools
-response: ChatResponse = chat(
-    'llama3.2',  # The model to use (you can change it as needed)
-    messages=messages,  # User message list
-    tools=tools,  # Tools for the chatbot to use
+client = Groq(api_key=GROQ_API_KEY)
+MODEL = 'llama3-groq-70b-8192-tool-use-preview'
+
+entire_response = client.chat.completions.create(
+    model=MODEL, # LLM to use
+    messages=messages, # Conversation history
+    stream=False,
+    tools=tools, # Available tools (i.e. functions) for our LLM to use
+    tool_choice="auto", # Let our LLM decide when to use tools
+    max_tokens=4096 # Maximum number of tokens to allow in our response
 )
 end_time = time.time()
-
+response = entire_response.choices[0]
+print(f"tool calls: {response.message.tool_calls}")
 # Calculate the elapsed time
 elapsed_time = end_time - start_time
 print(f'Elapsed Time: {elapsed_time:.2f} seconds')
