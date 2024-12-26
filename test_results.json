@@ -1,0 +1,139 @@
+[
+    {
+        "date": "2024-12-26 23:22:10",
+        "results": [
+            {
+                "model": "llama3-groq-8b-8192-tool-use-preview",
+                "correct": 5,
+                "incorrect": 2,
+                "accuracy": 71.42857142857143,
+                "total": 7,
+                "reponse_times": [
+                    0.519697904586792,
+                    0.5959141254425049,
+                    0.6070442199707031,
+                    0.5871069431304932,
+                    0.49326515197753906,
+                    0.4780862331390381,
+                    0.5954499244689941
+                ],
+                "avg_response_time": 0.5537949289594378,
+                "tags": {
+                    "mouse": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    }
+                }
+            },
+            {
+                "model": "llama3-groq-70b-8192-tool-use-preview",
+                "correct": 5,
+                "incorrect": 2,
+                "accuracy": 71.42857142857143,
+                "total": 7,
+                "reponse_times": [
+                    0.5860679149627686,
+                    0.6183710098266602,
+                    0.5099239349365234,
+                    0.45133304595947266,
+                    0.4303569793701172,
+                    0.4969902038574219,
+                    0.47675490379333496
+                ],
+                "avg_response_time": 0.5099711418151855,
+                "tags": {
+                    "mouse": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    }
+                }
+            },
+            {
+                "model": "llama-3.1-8b-instant",
+                "correct": 3,
+                "incorrect": 4,
+                "accuracy": 42.857142857142854,
+                "total": 7,
+                "reponse_times": [
+                    0.4762742519378662,
+                    0.4840719699859619,
+                    0.47706079483032227,
+                    0.7239460945129395,
+                    0.4750840663909912,
+                    0.7245430946350098,
+                    0.47732996940612793
+                ],
+                "avg_response_time": 0.5483300345284599,
+                "tags": {
+                    "mouse": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    }
+                }
+            }
+        ]
+    }
+]
