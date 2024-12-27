@@ -82,10 +82,18 @@ def get_groq_response(messages, model):
             )
             break  # Exit the loop if the request is successful
 
-        except Groq.InternalServerError as e:
-            # If a 503 error occurs, print and retry after 2 seconds
-            print("Error: Service unavailable. Retrying in 2 seconds...")
+        except Exception as e:
+            print(f"Error: {e}, retrying in 2 seconds...")
             time.sleep(2)  # Wait for 2 seconds before retrying
+
+        # except Groq.InternalServerError as e:
+        #     # If a 503 error occurs, print and retry after 2 seconds
+        #     print("Error: Service unavailable. Retrying in 2 seconds...")
+        #     time.sleep(2)  # Wait for 2 seconds before retrying
+        # except Groq.BadRequestError as e:
+        #     # If a 400 error occurs, print and break the loop
+        #     print("Error: Bad request. retrying...")
+            
     end_time = time.time()
     response = entire_response.choices[0]
     # Calculate the elapsed time
@@ -109,7 +117,9 @@ def test_models(models, prompts_to_test):
             "tags": {}
         }
         for test in prompts_to_test:  # test each prompt
-            messages = [{'role': 'user', 'content': test["prompt"]}]
+            messages=[{'role': 'system', 'content': 'You are a Large Language Model. You are given a transcript of a command and you have to determine the tools to use to execute the command or series of command. Take into account that since its a transcript the command may contain errors, so try to deduce what word the user meant to say from the context. For context the commands are all related to controlling a computer using the mouse and keyboard.'}]
+            command = {'role': 'user', 'content': test["prompt"]}
+            messages.append(command)
             response,response_time = get_groq_response(messages, model)
             model_results["reponse_times"].append(response_time)
             tools = response.message.tool_calls if response.message and response.message.tool_calls else []
@@ -147,14 +157,52 @@ try:
         existing_data = json.load(file)  # Load existing data as a dictionary
 except FileNotFoundError:
     existing_data = []  # Create an empty dictionary if file doesn't exist
+except json.decoder.JSONDecodeError:
+    existing_data = []
 
 added_data = {
     "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "notes" : "None",
     "results": results
 }
+
+notes = input("Enter notes (empty for no notes): ")
+if notes:
+    added_data["notes"] = notes
+
 
 existing_data.append(added_data)  # Append the new data to the existing data
 
 
 with open("test_results.json", "w") as file:
     json.dump(existing_data, file, indent=4)  # Save the dictionary to the file
+
+def summarize_results(data):
+    summary = {}
+    for entry in data:
+        for result in entry["results"]:
+            model = result["model"]
+            if model not in summary:
+                summary[model] = {
+                    "total_accuracy": 0,
+                    "total_response_time": 0,
+                    "entries_count": 0
+                }
+            summary[model]["total_accuracy"] += result["accuracy"]
+            summary[model]["total_response_time"] += result["avg_response_time"]
+            summary[model]["entries_count"] += 1
+    
+    overview = []
+    for model, values in summary.items():
+        overview.append({
+            "LLM": model,
+            "accuracy": values["total_accuracy"] / values["entries_count"],
+            "avg_response_time": values["total_response_time"] / values["entries_count"]
+        })
+    return overview
+
+overview_results = summarize_results(existing_data)
+
+with open("test_results_overview.json", "w") as file:
+    json.dump(overview_results, file, indent=4)  # Save the dictionary to the file
+

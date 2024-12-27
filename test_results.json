@@ -1,6 +1,7 @@
 [
     {
-        "date": "2024-12-26 23:22:10",
+        "date": "2024-12-26 23:34:29",
+        "notes": "initial test (no context given to LLM)",
         "results": [
             {
                 "model": "llama3-groq-8b-8192-tool-use-preview",
@@ -9,15 +10,15 @@
                 "accuracy": 71.42857142857143,
                 "total": 7,
                 "reponse_times": [
-                    0.519697904586792,
-                    0.5959141254425049,
-                    0.6070442199707031,
-                    0.5871069431304932,
-                    0.49326515197753906,
-                    0.4780862331390381,
-                    0.5954499244689941
+                    0.5102620124816895,
+                    0.6068639755249023,
+                    0.5995528697967529,
+                    0.6006770133972168,
+                    0.47510504722595215,
+                    0.46706295013427734,
+                    0.46970605850219727
                 ],
-                "avg_response_time": 0.5537949289594378,
+                "avg_response_time": 0.5327471324375698,
                 "tags": {
                     "mouse": {
                         "correct": 0,
@@ -53,15 +54,15 @@
                 "accuracy": 71.42857142857143,
                 "total": 7,
                 "reponse_times": [
-                    0.5860679149627686,
-                    0.6183710098266602,
-                    0.5099239349365234,
-                    0.45133304595947266,
-                    0.4303569793701172,
-                    0.4969902038574219,
-                    0.47675490379333496
+                    0.4340651035308838,
+                    0.6573600769042969,
+                    0.6028397083282471,
+                    0.47402000427246094,
+                    0.47814106941223145,
+                    0.47601890563964844,
+                    0.47812390327453613
                 ],
-                "avg_response_time": 0.5099711418151855,
+                "avg_response_time": 0.5143669673374721,
                 "tags": {
                     "mouse": {
                         "correct": 1,
@@ -92,20 +93,296 @@
             },
             {
                 "model": "llama-3.1-8b-instant",
-                "correct": 3,
-                "incorrect": 4,
-                "accuracy": 42.857142857142854,
+                "correct": 5,
+                "incorrect": 2,
+                "accuracy": 71.42857142857143,
                 "total": 7,
                 "reponse_times": [
-                    0.4762742519378662,
-                    0.4840719699859619,
-                    0.47706079483032227,
-                    0.7239460945129395,
-                    0.4750840663909912,
-                    0.7245430946350098,
-                    0.47732996940612793
+                    0.38176631927490234,
+                    0.45084404945373535,
+                    0.4776163101196289,
+                    0.7203891277313232,
+                    0.36716127395629883,
+                    0.4192802906036377,
+                    0.3935399055480957
                 ],
-                "avg_response_time": 0.5483300345284599,
+                "avg_response_time": 0.4586567538125174,
+                "tags": {
+                    "mouse": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "date": "2024-12-27 04:17:53",
+        "notes": "given system prompt",
+        "results": [
+            {
+                "model": "llama3-groq-8b-8192-tool-use-preview",
+                "correct": 5,
+                "incorrect": 2,
+                "accuracy": 71.42857142857143,
+                "total": 7,
+                "reponse_times": [
+                    0.4781491756439209,
+                    0.5182638168334961,
+                    0.48536229133605957,
+                    0.5633358955383301,
+                    0.4429922103881836,
+                    0.6131327152252197,
+                    0.4730350971221924
+                ],
+                "avg_response_time": 0.5106101717267718,
+                "tags": {
+                    "mouse": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    }
+                }
+            },
+            {
+                "model": "llama3-groq-70b-8192-tool-use-preview",
+                "correct": 4,
+                "incorrect": 3,
+                "accuracy": 57.14285714285714,
+                "total": 7,
+                "reponse_times": [
+                    0.47564005851745605,
+                    0.6262879371643066,
+                    0.5687448978424072,
+                    0.530189037322998,
+                    0.9184019565582275,
+                    0.861314058303833,
+                    0.5918769836425781
+                ],
+                "avg_response_time": 0.6532078470502581,
+                "tags": {
+                    "mouse": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    }
+                }
+            },
+            {
+                "model": "llama-3.1-8b-instant",
+                "correct": 5,
+                "incorrect": 2,
+                "accuracy": 71.42857142857143,
+                "total": 7,
+                "reponse_times": [
+                    0.372514009475708,
+                    0.4469759464263916,
+                    0.38575196266174316,
+                    0.4411642551422119,
+                    0.3712887763977051,
+                    0.6504099369049072,
+                    0.4333059787750244
+                ],
+                "avg_response_time": 0.4430586951119559,
+                "tags": {
+                    "mouse": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "date": "2024-12-27 04:46:12",
+        "notes": "None",
+        "results": [
+            {
+                "model": "llama3-groq-8b-8192-tool-use-preview",
+                "correct": 6,
+                "incorrect": 1,
+                "accuracy": 85.71428571428571,
+                "total": 7,
+                "reponse_times": [
+                    0.4708559513092041,
+                    0.5271389484405518,
+                    0.48531079292297363,
+                    0.5486810207366943,
+                    0.44388723373413086,
+                    0.46677303314208984,
+                    0.44335508346557617
+                ],
+                "avg_response_time": 0.48371458053588867,
+                "tags": {
+                    "mouse": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    }
+                }
+            },
+            {
+                "model": "llama3-groq-70b-8192-tool-use-preview",
+                "correct": 4,
+                "incorrect": 3,
+                "accuracy": 57.14285714285714,
+                "total": 7,
+                "reponse_times": [
+                    0.4488849639892578,
+                    0.6247727870941162,
+                    0.5091550350189209,
+                    0.5281987190246582,
+                    0.8323459625244141,
+                    0.46269702911376953,
+                    0.47573304176330566
+                ],
+                "avg_response_time": 0.5545410769326347,
+                "tags": {
+                    "mouse": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    },
+                    "single": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    },
+                    "multiple": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "keys": {
+                        "correct": 0,
+                        "incorrect": 1,
+                        "total": 1
+                    },
+                    "wrong word": {
+                        "correct": 1,
+                        "incorrect": 0,
+                        "total": 1
+                    }
+                }
+            },
+            {
+                "model": "llama-3.1-8b-instant",
+                "correct": 5,
+                "incorrect": 2,
+                "accuracy": 71.42857142857143,
+                "total": 7,
+                "reponse_times": [
+                    0.3694281578063965,
+                    0.4274561405181885,
+                    0.4091341495513916,
+                    0.44743800163269043,
+                    0.3637709617614746,
+                    0.3972940444946289,
+                    0.3722972869873047
+                ],
+                "avg_response_time": 0.39811696325029644,
                 "tags": {
                     "mouse": {
                         "correct": 0,

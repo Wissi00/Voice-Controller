@@ -1,0 +1,17 @@
+[
+    {
+        "LLM": "llama3-groq-8b-8192-tool-use-preview",
+        "accuracy": 76.19047619047619,
+        "avg_response_time": 0.5090239615667435
+    },
+    {
+        "LLM": "llama3-groq-70b-8192-tool-use-preview",
+        "accuracy": 61.9047619047619,
+        "avg_response_time": 0.5740386304401216
+    },
+    {
+        "LLM": "llama-3.1-8b-instant",
+        "accuracy": 71.42857142857143,
+        "avg_response_time": 0.43327747072492323
+    }
+]
